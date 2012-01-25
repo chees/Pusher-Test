@@ -1,5 +1,5 @@
 /.classpath
-/conf/pusher.conf
+#/conf/pusher.conf
 /eclipse/
 /lib/
 /logs/
