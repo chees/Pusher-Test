@@ -1,11 +1,11 @@
 /.classpath
 /conf/pusher.conf
-/eclipse
-/lib
-/logs
-/modules
+/eclipse/
+/lib/
+/logs/
+/modules/
 /.project
-/.settings
-/test-result
-/tmp
+/.settings/
+/test-result/
+/tmp/
 
