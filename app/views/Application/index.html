@@ -3,6 +3,11 @@
 
 <h1>Pusher test</h1>
 
+<form onsubmit="send(); return false">
+	<input id="in" />
+	<input type="submit" value="Send" />
+</form>
+
 <button id="knopje" onclick="knopje(); return false">knopje</button>
 
 <script src="http://js.pusher.com/1.11/pusher.min.js"></script>
@@ -19,12 +24,18 @@ WEB_SOCKET_DEBUG = true;
 var pusher = new Pusher('f4bc874a627d26b1eb2b');
 var channel = pusher.subscribe('presence-channel');
 channel.bind('client-event', function(data) {
-	console.log(data);
+	console.log('' + Date.now() + ' ' + data);
 });
 
 function knopje() {
-	var triggered = channel.trigger('client-event', { 'test': true });
-	console.log(triggered);
+	channel.trigger('client-event', { 'test': true });
+}
+
+function send() {
+	var input = document.getElementById('in');
+	console.log(Date.now());
+	channel.trigger('client-event', input.value);
+	input.value = "";
 }
 
 </script>

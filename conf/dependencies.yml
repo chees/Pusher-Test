@@ -1,6 +1,6 @@
 # Application dependencies
 
 require:
-    - play 1.2.4
+    - play [1.2.3,1.2.4]
     - play -> pusher 0.1
 
