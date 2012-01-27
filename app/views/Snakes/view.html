@@ -1,0 +1,32 @@
+#{extends 'main.html' /}
+#{set title:'Snakes on a Plane' /}
+#{set 'moreStyles'}
+	#{stylesheet 'view.css' /}
+#{/set}
+
+<canvas id="canvas"></canvas>
+<div id="footer">
+	<img src="#" id="qr" />
+	<div>
+		Scan the code to join the game.
+	</div>
+</div>
+
+#{script 'util.js' /}
+#{script 'stats.js' /}
+#{script 'timer.js' /}
+#{script 'game.js' /}
+<script>
+var qrsrc = 'http://chart.googleapis.com/chart?chs=100x100&cht=qr&chld=M|0&chl=';
+qrsrc += encodeURIComponent(window.location.href.substring(0, window.location.href.length - "view.html".length));
+document.getElementById('qr').src = qrsrc;
+
+var canvas = document.getElementById('canvas');
+canvas.width = canvas.clientWidth;
+canvas.height = canvas.clientHeight;
+console.log(canvas.width, canvas.height);
+var ctx = canvas.getContext('2d');
+
+var game = new Game(ctx);
+game.start();
+</script>
