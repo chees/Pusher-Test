@@ -6,6 +6,8 @@ function Game(ctx) {
 }
 
 Game.prototype.start = function() {
+	var that = this;
+	
 	// Stats
 	this.stats.domElement.style.position = 'absolute';
 	this.stats.domElement.style.bottom = '0px';
@@ -17,12 +19,15 @@ Game.prototype.start = function() {
 	// TODO generate a new channel for every game
 	this.channel = pusher.subscribe('presence-channel');
 	this.channel.bind('client-event', function(data) {
-		console.log(Date.now(), data);
+		console.log(data); // TODO handle input
+	});
+	this.channel.bind('pusher:member_added', function(member) {
+		//console.log(member.id, member.info);
+		that.addPlayer();
 	});
 	
 	// Game loop
 	this.lastUpdateTimestamp = Date.now();
-	var that = this;
 	(function gameLoop() {
 		that.loop();
 		requestAnimFrame(gameLoop, that.ctx.canvas);

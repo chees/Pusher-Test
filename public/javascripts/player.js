@@ -5,7 +5,7 @@ function Player(game) {
 	this.lastX = this.x;
 	this.lastY = this.y;
 	this.angle = Math.random() * Math.PI * 2;
-	this.speed = 100;
+	this.speed = 10;
 	this.r = Math.floor(Math.random()*256);
 	this.g = Math.floor(Math.random()*256);
 	this.b = Math.floor(Math.random()*256);
@@ -23,7 +23,7 @@ Player.prototype.update = function() {
 	this.x += Math.cos(this.angle) * d;
 	this.y -= Math.sin(this.angle) * d;
 	
-	this.angle += Math.random() * 0.8 - 0.4;
+	//this.angle += Math.random() * 0.8 - 0.4;
 	
 	if (this.x < 0 || this.x > game.ctx.canvas.width ||
 		this.y < 0 || this.y > game.ctx.canvas.height) {
