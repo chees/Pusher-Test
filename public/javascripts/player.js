@@ -6,7 +6,7 @@ function Player(game, id) {
 	this.lastX = this.x;
 	this.lastY = this.y;
 	this.angle = Math.random() * Math.PI * 2;
-	this.speed = 10;
+	this.speed = 100;
 	this.r = Math.floor(Math.random()*256);
 	this.g = Math.floor(Math.random()*256);
 	this.b = Math.floor(Math.random()*256);

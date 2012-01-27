@@ -52,12 +52,10 @@ function init() {
 	var right = document.getElementById('right');
 	
 	if(typeof(document.ontouchmove) != 'undefined') {
-		/*
 		left.addEventListener('touchstart', handleEvent, false);
 		left.addEventListener('touchmove', handleEvent, false);
 		right.addEventListener('touchstart', handleEvent, false);
 		right.addEventListener('touchmove', handleEvent, false);
-		*/
 	} else {
 		left.addEventListener('mousedown', handleEvent, false);
 		right.addEventListener('mousedown', handleEvent, false);
