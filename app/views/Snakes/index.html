@@ -19,11 +19,13 @@ Pusher.log = function(message) {
 // Flash fallback logging - don't include this in production
 WEB_SOCKET_DEBUG = true;
 
+var id = '';
 var subscription_succeeded = false;
 
 var pusher = new Pusher('f4bc874a627d26b1eb2b');
 var channel = pusher.subscribe('presence-channel');
-channel.bind('pusher:subscription_succeeded', function() {
+channel.bind('pusher:subscription_succeeded', function(d) {
+	id = readCookie('id');
 	subscription_succeeded = true;
 });
 channel.bind('client-event', function(data) {
@@ -35,13 +37,13 @@ var mousedown = false;
 
 function handleEvent(e) {
 	e.preventDefault();
-	if(!subscribtion_succeeded) return;
+	if(!subscription_succeeded) return;
 	
 	if(e.srcElement.id == 'left') {
-		channel.trigger('client-event', { 'd': -1 });
+		channel.trigger('client-event', { 'id': id, 'd': 1 });
 	}
 	if(e.srcElement.id == 'right') {
-		channel.trigger('client-event', { 'd': 1 });
+		channel.trigger('client-event', { 'id': id, 'd': -1 });
 	}
 }
 
@@ -63,5 +65,18 @@ function init() {
 }
 
 init();
+
+
+
+function readCookie(name) {
+	var nameEQ = name + "=";
+	var ca = document.cookie.split(';');
+	for(var i=0;i < ca.length;i++) {
+		var c = ca[i];
+		while (c.charAt(0)==' ') c = c.substring(1,c.length);
+		if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+	}
+	return null;
+}
 
 </script>

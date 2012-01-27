@@ -10,6 +10,9 @@ public class PusherController extends Controller {
     public static void auth(String socket_id, String channel_name) {
     	Pusher pusher = new Pusher();
     	User user = new User();
+    	
+    	response.setCookie("id", user.uuid);
+    	
     	PresenceChannelData channelData = new PresenceChannelData(user.uuid, null);
     	renderJSON(pusher.createAuthString(socket_id, channel_name, channelData));
     }

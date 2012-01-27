@@ -1,5 +1,6 @@
-function Player(game) {
+function Player(game, id) {
 	this.game = game;
+	this.id = id;
 	this.x = Math.random() * game.ctx.canvas.width/2 + game.ctx.canvas.width/4;
 	this.y = Math.random() * game.ctx.canvas.height/2 + game.ctx.canvas.height/4;
 	this.lastX = this.x;

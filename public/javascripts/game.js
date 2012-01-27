@@ -19,11 +19,11 @@ Game.prototype.start = function() {
 	// TODO generate a new channel for every game
 	this.channel = pusher.subscribe('presence-channel');
 	this.channel.bind('client-event', function(data) {
-		console.log(data); // TODO handle input
+		that.handleInput(data);
 	});
 	this.channel.bind('pusher:member_added', function(member) {
 		//console.log(member.id, member.info);
-		that.addPlayer();
+		that.addPlayer(member.id);
 	});
 	
 	// Game loop
@@ -34,6 +34,16 @@ Game.prototype.start = function() {
 	})();
 	
 	console.log('Game started');
+};
+
+Game.prototype.handleInput = function(data) {
+	console.log(data);
+	for (var i = 0; i < this.entities.length; i++) {
+		var ent = this.entities[i];
+		if (ent.id == data.id) {
+			ent.angle += data.d;
+		}
+	}
 };
 
 Game.prototype.loop = function() {
@@ -60,16 +70,12 @@ Game.prototype.update = function() {
 };
 
 Game.prototype.draw = function() {
-	//this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
-	//this.ctx.fillStyle = 'rgba(0, 0, 0, .04)';
-	//this.ctx.fillRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
-	
 	for (var i = 0; i < this.entities.length; i++) {
 		this.entities[i].draw(this.ctx);
 	}
 };
 
-Game.prototype.addPlayer = function() {
-	this.entities.push(new Player(this));
+Game.prototype.addPlayer = function(id) {
+	this.entities.push(new Player(this, id));
 	console.log('Player added');
 };
