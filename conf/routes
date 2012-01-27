@@ -2,10 +2,9 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 
-# Home page
 GET     /                                       Application.index
-
 POST	/pusher/auth							PusherController.auth
+GET		/snakes/?								Snakes.index
 
 # Ignore favicon requests
 GET     /favicon.ico                            404

@@ -6,17 +6,28 @@ function Game(ctx) {
 }
 
 Game.prototype.start = function() {
+	// Stats
 	this.stats.domElement.style.position = 'absolute';
 	this.stats.domElement.style.bottom = '0px';
 	this.stats.domElement.style.right = '0px';
 	document.body.appendChild(this.stats.domElement);
 	
+	// Pusher
+	var pusher = new Pusher('f4bc874a627d26b1eb2b');
+	// TODO generate a new channel for every game
+	this.channel = pusher.subscribe('presence-channel');
+	this.channel.bind('client-event', function(data) {
+		console.log(Date.now(), data);
+	});
+	
+	// Game loop
 	this.lastUpdateTimestamp = Date.now();
 	var that = this;
 	(function gameLoop() {
 		that.loop();
 		requestAnimFrame(gameLoop, that.ctx.canvas);
 	})();
+	
 	console.log('Game started');
 };
 

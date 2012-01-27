@@ -13,11 +13,12 @@
 	</div>
 </div>
 
-#{script 'util.js' /}
-#{script 'stats.js' /}
-#{script 'timer.js' /}
-#{script 'player.js' /}
-#{script 'game.js' /}
+<script src="http://js.pusher.com/1.11/pusher.min.js"></script>
+<script src="/public/javascripts/util.js"></script>
+<script src="/public/javascripts/stats.js"></script>
+<script src="/public/javascripts/timer.js"></script>
+<script src="/public/javascripts/player.js"></script>
+<script src="/public/javascripts/game.js"></script>
 <script>
 var qrsrc = 'http://chart.googleapis.com/chart?chs=100x100&cht=qr&chld=M|0&chl=';
 qrsrc += encodeURIComponent(window.location.href.substring(0, window.location.href.length - "view.html".length));
@@ -30,4 +31,14 @@ var ctx = canvas.getContext('2d');
 
 var game = new Game(ctx);
 game.start();
+
+
+//Enable pusher logging - don't include this in production
+Pusher.log = function(message) {
+	if (window.console && window.console.log) window.console.log(message);
+};
+
+// Flash fallback logging - don't include this in production
+WEB_SOCKET_DEBUG = true;
+
 </script>

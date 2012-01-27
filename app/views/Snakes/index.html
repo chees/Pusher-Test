@@ -1,4 +1,60 @@
 #{extends 'main.html' /}
 #{set title:'Snakes on a Plane' /}
+#{set 'moreStyles'}
+	#{stylesheet 'controller.css' /}
+#{/set}
 
-TODO: controller goes here
+<div class="directions">
+	<span id="left">⇦</span>
+	<span id="right">⇨</span>
+</div>
+
+<script src="http://js.pusher.com/1.11/pusher.min.js"></script>
+<script>
+//Enable pusher logging - don't include this in production
+Pusher.log = function(message) {
+	if (window.console && window.console.log) window.console.log(message);
+};
+
+// Flash fallback logging - don't include this in production
+WEB_SOCKET_DEBUG = true;
+
+var pusher = new Pusher('f4bc874a627d26b1eb2b');
+var channel = pusher.subscribe('presence-channel');
+channel.bind('client-event', function(data) {
+	console.log('' + Date.now() + ' ' + data);
+});
+
+
+var mousedown = false;
+
+function handleEvent(e) {
+	e.preventDefault();
+	if(e.srcElement.id == 'left') {
+		channel.trigger('client-event', { 'd': -1 });
+	}
+	if(e.srcElement.id == 'right') {
+		channel.trigger('client-event', { 'd': 1 });
+	}
+}
+
+function init() {
+	var left = document.getElementById('left');
+	var right = document.getElementById('right');
+	
+	if(typeof(document.ontouchmove) != 'undefined') {
+		/*
+		left.addEventListener('touchstart', handleEvent, false);
+		left.addEventListener('touchmove', handleEvent, false);
+		right.addEventListener('touchstart', handleEvent, false);
+		right.addEventListener('touchmove', handleEvent, false);
+		*/
+	} else {
+		left.addEventListener('mousedown', handleEvent, false);
+		right.addEventListener('mousedown', handleEvent, false);
+	}
+}
+
+init();
+
+</script>
