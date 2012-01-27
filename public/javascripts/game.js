@@ -53,3 +53,7 @@ Game.prototype.draw = function() {
 	}
 };
 
+Game.prototype.addPlayer = function() {
+	this.entities.push(new Player(this));
+	console.log('Player added');
+};
