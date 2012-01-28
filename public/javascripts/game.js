@@ -37,11 +37,10 @@ Game.prototype.start = function() {
 };
 
 Game.prototype.handleInput = function(data) {
-	console.log(data);
 	for (var i = 0; i < this.entities.length; i++) {
 		var ent = this.entities[i];
 		if (ent.id == data.id) {
-			ent.angle += data.d;
+			ent.dir = data.dir;
 		}
 	}
 };

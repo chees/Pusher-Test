@@ -21,6 +21,7 @@ WEB_SOCKET_DEBUG = true;
 
 var id = '';
 var subscription_succeeded = false;
+var dir = 0; // Direction -1:left, 0:straight, 1:right
 
 var pusher = new Pusher('f4bc874a627d26b1eb2b');
 var channel = pusher.subscribe('presence-channel');
@@ -33,17 +34,37 @@ channel.bind('client-event', function(data) {
 });
 
 
-var mousedown = false;
-
 function handleEvent(e) {
 	e.preventDefault();
-	if(!subscription_succeeded) return;
+	if (!subscription_succeeded) return;
 	
-	if(e.srcElement.id == 'left') {
-		channel.trigger('client-event', { 'id': id, 'd': 1 });
+	if (e.srcElement.id == 'left') {
+		channel.trigger('client-event', { 'id': id, 'dir': 1 });
 	}
-	if(e.srcElement.id == 'right') {
-		channel.trigger('client-event', { 'id': id, 'd': -1 });
+	if (e.srcElement.id == 'right') {
+		channel.trigger('client-event', { 'id': id, 'dir': -1 });
+	}
+}
+
+function handleKeyDown(e) {
+	if (e.keyCode == 37) {
+		if (dir != 1) {
+			dir = 1;
+			channel.trigger('client-event', { 'id': id, 'dir': dir });
+		}
+	}
+	if (e.keyCode == 39) {
+		if (dir != -1) {
+			dir = -1;
+			channel.trigger('client-event', { 'id': id, 'dir': dir });
+		}
+	}
+}
+
+function handleKeyUp(e) {
+	if (e.keyCode == 37 && dir == 1 || e.keyCode == 39 && dir == -1) {
+		dir = 0;
+		channel.trigger('client-event', { 'id': id, 'dir': dir });
 	}
 }
 
@@ -51,7 +72,7 @@ function init() {
 	var left = document.getElementById('left');
 	var right = document.getElementById('right');
 	
-	if(typeof(document.ontouchmove) != 'undefined') {
+	if (typeof(document.ontouchmove) != 'undefined') {
 		left.addEventListener('touchstart', handleEvent, false);
 		left.addEventListener('touchmove', handleEvent, false);
 		right.addEventListener('touchstart', handleEvent, false);
@@ -60,6 +81,9 @@ function init() {
 		left.addEventListener('mousedown', handleEvent, false);
 		right.addEventListener('mousedown', handleEvent, false);
 	}
+	
+	document.addEventListener('keydown', handleKeyDown, false);
+	document.addEventListener('keyup', handleKeyUp, false);
 }
 
 init();

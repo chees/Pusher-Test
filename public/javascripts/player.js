@@ -5,8 +5,10 @@ function Player(game, id) {
 	this.y = Math.random() * game.ctx.canvas.height/2 + game.ctx.canvas.height/4;
 	this.lastX = this.x;
 	this.lastY = this.y;
+	this.dir = 0; // Requested direction change
 	this.angle = Math.random() * Math.PI * 2;
 	this.speed = 100;
+	this.turnSpeed = 3;
 	this.r = Math.floor(Math.random()*256);
 	this.g = Math.floor(Math.random()*256);
 	this.b = Math.floor(Math.random()*256);
@@ -25,6 +27,8 @@ Player.prototype.update = function() {
 	this.y -= Math.sin(this.angle) * d;
 	
 	//this.angle += Math.random() * 0.8 - 0.4;
+	
+	this.angle += this.dir * this.game.clockTick * this.turnSpeed;
 	
 	if (this.x < 0 || this.x > game.ctx.canvas.width ||
 		this.y < 0 || this.y > game.ctx.canvas.height) {
