@@ -26,18 +26,27 @@ Player.prototype.update = function() {
 	this.x += Math.cos(this.angle) * d;
 	this.y -= Math.sin(this.angle) * d;
 	
-	//this.angle += Math.random() * 0.8 - 0.4;
-	
 	this.angle += this.dir * this.game.clockTick * this.turnSpeed;
+	
+	
 	
 	if (this.x < 0 || this.x > game.ctx.canvas.width ||
 		this.y < 0 || this.y > game.ctx.canvas.height) {
 		this.isDead = true;
-		console.log('Player died');
+		console.log('Player hit the wall');
+	} else {
+		
+		//var pixel = this.game.ctx.getImageData(this.x, this.y, 1, 1).data;
+		//if (pixel[0] != 0 || pixel[1] != 0 || pixel[2] != 0 || pixel[3] != 0) {
+			//console.log(pixel);
+			//this.isDead = true;
+			//console.log('Player died');
+		//}
 	}
 };
 
 Player.prototype.draw = function(ctx) {
+	if (this.isDead) return;
 	ctx.strokeStyle = 'rgb('+this.r+','+this.g+','+this.b+')';
 	ctx.lineWidth = 10;
 	ctx.lineCap = 'round';

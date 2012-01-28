@@ -6,11 +6,11 @@
 
 <canvas id="canvas"></canvas>
 <div id="footer">
-	<img src="#" id="qr" />
+	<img src="#" id="qr">
 	<div>
 		Scan the code to join the game.
-		<button onclick="game.addPlayer(); return false">DEBUG Add player</button>
 	</div>
+	<div id="log"></div>
 </div>
 
 <script src="http://js.pusher.com/1.11/pusher.min.js"></script>
@@ -25,20 +25,20 @@ qrsrc += encodeURIComponent(window.location.href.substring(0, window.location.hr
 document.getElementById('qr').src = qrsrc;
 
 var canvas = document.getElementById('canvas');
-canvas.width = document.width;
-canvas.height = document.height - 100;
-var ctx = canvas.getContext('2d');
+// TODO is this the way to get proper width and height?
+canvas.width = document.documentElement.clientWidth;
+canvas.height = document.documentElement.clientHeight - 100;
 
-var game = new Game(ctx);
+var game = new Game(canvas.getContext('2d'));
 game.start();
-
-
+/*
 //Enable pusher logging - don't include this in production
 Pusher.log = function(message) {
-	if (window.console && window.console.log) window.console.log(message);
+	//if (window.console && window.console.log) window.console.log(message);
+	//document.getElementById('log').innerHTML += message + '<br>';
 };
 
 // Flash fallback logging - don't include this in production
 WEB_SOCKET_DEBUG = true;
-
+*/
 </script>

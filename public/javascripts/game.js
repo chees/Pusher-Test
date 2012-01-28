@@ -18,6 +18,9 @@ Game.prototype.start = function() {
 	var pusher = new Pusher('f4bc874a627d26b1eb2b');
 	// TODO generate a new channel for every game
 	this.channel = pusher.subscribe('presence-channel');
+	this.channel.bind('pusher:subscription_error', function(d) {
+		// TODO
+	});
 	this.channel.bind('client-event', function(data) {
 		that.handleInput(data);
 	});
