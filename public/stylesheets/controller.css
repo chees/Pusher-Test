@@ -1,4 +1,31 @@
-.directions span {
-	font-size: 24px;
-	border: 1px solid black;
+body {
+	background: #fff url(/public/images/snakepattern1.png) center center fixed no-repeat;
+	background-size: cover;
+}
+
+#dpad {
+	width: 80%;
+	margin: 40px 10%;
+	position: relative;
+}
+
+#dpad div {
+	position: absolute;
+	width: 50%;
+	background-color: black;
+	color: white;
+	text-align: center;
+	font-size: 64px;
+	line-height: 100px;
+}
+
+#dpad #left {
+	left: 0;
+	border-top-left-radius: 15px;
+	border-bottom-left-radius: 15px;
+}
+#dpad #right {
+	right: 0;
+	border-top-right-radius: 15px;
+	border-bottom-right-radius: 15px;
 }

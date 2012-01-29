@@ -1,16 +1,23 @@
-#{extends 'main.html' /}
-#{set title:'Snakes on a Plane' /}
-#{set 'moreStyles'}
-	#{stylesheet 'controller.css' /}
-#{/set}
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Snakes on a Plain</title>
+	<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
+	<link rel="shortcut icon" type="image/png" href="/public/images/favicon.png">
+	<link rel="stylesheet" type="text/css" href="/public/stylesheets/controller.css">
+</head>
+<body>
 
-<div class="directions">
-	<span id="left">⇦</span>
-	<span id="right">⇨</span>
+<div id="dpad">
+	<div id="left">⇦</div><div id="right">⇨</div>
 </div>
+
+<div id="log" style="width: 90%; max-height: 200px; position: absolute; top:120px; background-color: white;"></div>
 
 <script src="http://js.pusher.com/1.11/pusher.min.js"></script>
 <script>
+/*
 //Enable pusher logging - don't include this in production
 Pusher.log = function(message) {
 	if (window.console && window.console.log) window.console.log(message);
@@ -18,6 +25,7 @@ Pusher.log = function(message) {
 
 // Flash fallback logging - don't include this in production
 WEB_SOCKET_DEBUG = true;
+*/
 
 var id = '';
 var subscription_succeeded = false;
@@ -30,75 +38,90 @@ channel.bind('pusher:subscription_succeeded', function(d) {
 	subscription_succeeded = true;
 });
 channel.bind('client-event', function(data) {
-	console.log('' + Date.now() + ' ' + data);
+	//console.log(data);
 });
 
-
-function handleEvent(e) {
+function handleTouch(e) {
 	e.preventDefault();
 	if (!subscription_succeeded) return;
 	
-	if (e.srcElement.id == 'left') {
-		channel.trigger('client-event', { 'id': id, 'dir': 1 });
-	}
-	if (e.srcElement.id == 'right') {
-		channel.trigger('client-event', { 'id': id, 'dir': -1 });
-	}
-}
-
-function handleKeyDown(e) {
-	if (e.keyCode == 37) {
-		if (dir != 1) {
+	if (e.type == 'touchend') {
+		if (dir != 0) {
+			dir = 0;
+			send({ 'dir': dir });
+		}
+	} else {
+		if (e.touches[0].pageX < document.documentElement.clientWidth / 2 && dir != 1) {
 			dir = 1;
-			channel.trigger('client-event', { 'id': id, 'dir': dir });
+			send({ 'dir': dir });
 		}
-	}
-	if (e.keyCode == 39) {
-		if (dir != -1) {
+		if (e.touches[0].pageX > document.documentElement.clientWidth / 2 && dir != -1) {
 			dir = -1;
-			channel.trigger('client-event', { 'id': id, 'dir': dir });
+			send({ 'dir': dir });
 		}
 	}
 }
 
-function handleKeyUp(e) {
-	if (e.keyCode == 37 && dir == 1 || e.keyCode == 39 && dir == -1) {
-		dir = 0;
-		channel.trigger('client-event', { 'id': id, 'dir': dir });
+function handleKey(e) {
+	if (e.type == 'keyup') {
+		if (e.keyCode == 37 && dir == 1 || e.keyCode == 39 && dir == -1) {
+			dir = 0;
+			send({ 'dir': dir });
+		}
+	} else {
+		if (e.keyCode == 37 && dir != 1) {
+			dir = 1;
+			send({ 'dir': dir });
+		}
+		if (e.keyCode == 39 && dir != -1) {
+			dir = -1;
+			send({ 'dir': dir });
+		}
 	}
+}
+
+function send(m) {
+	if (!subscription_succeeded) return;
+	m.id = id;
+	channel.trigger('client-event', m);
 }
 
 function init() {
+	var dpad = document.getElementById('dpad');
 	var left = document.getElementById('left');
 	var right = document.getElementById('right');
 	
 	if (typeof(document.ontouchmove) != 'undefined') {
-		left.addEventListener('touchstart', handleEvent, false);
-		left.addEventListener('touchmove', handleEvent, false);
-		right.addEventListener('touchstart', handleEvent, false);
-		right.addEventListener('touchmove', handleEvent, false);
+		dpad.addEventListener('touchstart', handleTouch, false);
+		dpad.addEventListener('touchmove', handleTouch, false);
+		dpad.addEventListener('touchend', handleTouch, false);
 	} else {
-		left.addEventListener('mousedown', handleEvent, false);
-		right.addEventListener('mousedown', handleEvent, false);
+		//left.addEventListener('mousedown', handleEvent, false);
+		//right.addEventListener('mousedown', handleEvent, false);
 	}
 	
-	document.addEventListener('keydown', handleKeyDown, false);
-	document.addEventListener('keyup', handleKeyUp, false);
+	document.addEventListener('keydown', handleKey, false);
+	document.addEventListener('keyup', handleKey, false);
 }
 
 init();
 
 
 
+
 function readCookie(name) {
 	var nameEQ = name + "=";
 	var ca = document.cookie.split(';');
-	for(var i=0;i < ca.length;i++) {
+	for ( var i = 0; i < ca.length; i++) {
 		var c = ca[i];
-		while (c.charAt(0)==' ') c = c.substring(1,c.length);
-		if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+		while (c.charAt(0) == ' ')
+			c = c.substring(1, c.length);
+		if (c.indexOf(nameEQ) == 0)
+			return c.substring(nameEQ.length, c.length);
 	}
 	return null;
 }
-
 </script>
+
+</body>
+</html>

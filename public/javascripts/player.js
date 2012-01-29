@@ -7,7 +7,7 @@ function Player(game, id) {
 	this.lastY = this.y;
 	this.dir = 0; // Requested direction change
 	this.angle = Math.random() * Math.PI * 2;
-	this.speed = 200;
+	this.speed = 100;
 	this.turnSpeed = 3;
 	this.lineWidth = 16;
 	this.r = Math.floor(Math.random()*256);
