@@ -1,6 +1,7 @@
-function Game(ctx) {
-	this.entities = [];
+function Game(ctx, room) {
 	this.ctx = ctx;
+	this.room = room;
+	this.entities = [];
 	this.timer = new Timer();
 	this.stats = new Stats();
 }
@@ -17,7 +18,8 @@ Game.prototype.start = function() {
 	// Pusher
 	var pusher = new Pusher('f4bc874a627d26b1eb2b');
 	// TODO generate a new channel for every game
-	this.channel = pusher.subscribe('presence-channel');
+	//this.channel = pusher.subscribe('presence-channel');
+	this.channel = pusher.subscribe('presence-' + this.room);
 	this.channel.bind('pusher:subscription_error', function(d) {
 		// TODO
 	});

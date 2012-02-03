@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Snakes on a Plain</title>
+	<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
+	<link rel="shortcut icon" type="image/png" href="/public/images/favicon.png">
+	<link rel="stylesheet" type="text/css" href="/public/stylesheets/controller.css">
+</head>
+<body>
+
+<div id="dpad">
+	<div id="left">⇦</div><div id="right">⇨</div>
+</div>
+
+<div id="log" style="width: 90%; max-height: 200px; position: absolute; top:120px; background-color: white;"></div>
+
+<script src="http://js.pusher.com/1.11/pusher.min.js"></script>
+<script>
+/*
+//Enable pusher logging - don't include this in production
+Pusher.log = function(message) {
+	if (window.console && window.console.log) window.console.log(message);
+};
+
+// Flash fallback logging - don't include this in production
+WEB_SOCKET_DEBUG = true;
+*/
+
+var id = '';
+var subscription_succeeded = false;
+var dir = 0; // Direction -1:left, 0:straight, 1:right
+
+var pusher = new Pusher('f4bc874a627d26b1eb2b');
+//var channel = pusher.subscribe('presence-channel');
+var channel = pusher.subscribe('presence-${room}');
+channel.bind('pusher:subscription_succeeded', function(d) {
+	id = readCookie('id');
+	subscription_succeeded = true;
+});
+channel.bind('client-event', function(data) {
+	//console.log(data);
+});
+
+function handleTouch(e) {
+	e.preventDefault();
+	if (!subscription_succeeded) return;
+	
+	if (e.type == 'touchend') {
+		if (dir != 0) {
+			dir = 0;
+			send({ 'dir': dir });
+		}
+	} else {
+		if (e.touches[0].pageX < document.documentElement.clientWidth / 2 && dir != 1) {
+			dir = 1;
+			send({ 'dir': dir });
+		}
+		if (e.touches[0].pageX > document.documentElement.clientWidth / 2 && dir != -1) {
+			dir = -1;
+			send({ 'dir': dir });
+		}
+	}
+}
+
+function handleKey(e) {
+	if (e.type == 'keyup') {
+		if (e.keyCode == 37 && dir == 1 || e.keyCode == 39 && dir == -1) {
+			dir = 0;
+			send({ 'dir': dir });
+		}
+	} else {
+		if (e.keyCode == 37 && dir != 1) {
+			dir = 1;
+			send({ 'dir': dir });
+		}
+		if (e.keyCode == 39 && dir != -1) {
+			dir = -1;
+			send({ 'dir': dir });
+		}
+	}
+}
+
+function send(m) {
+	if (!subscription_succeeded) return;
+	m.id = id;
+	channel.trigger('client-event', m);
+}
+
+function init() {
+	var dpad = document.getElementById('dpad');
+	var left = document.getElementById('left');
+	var right = document.getElementById('right');
+	
+	if (typeof(document.ontouchmove) != 'undefined') {
+		dpad.addEventListener('touchstart', handleTouch, false);
+		dpad.addEventListener('touchmove', handleTouch, false);
+		dpad.addEventListener('touchend', handleTouch, false);
+	} else {
+		//left.addEventListener('mousedown', handleEvent, false);
+		//right.addEventListener('mousedown', handleEvent, false);
+	}
+	
+	document.addEventListener('keydown', handleKey, false);
+	document.addEventListener('keyup', handleKey, false);
+}
+
+init();
+
+
+
+
+function readCookie(name) {
+	var nameEQ = name + "=";
+	var ca = document.cookie.split(';');
+	for ( var i = 0; i < ca.length; i++) {
+		var c = ca[i];
+		while (c.charAt(0) == ' ')
+			c = c.substring(1, c.length);
+		if (c.indexOf(nameEQ) == 0)
+			return c.substring(nameEQ.length, c.length);
+	}
+	return null;
+}
+</script>
+
+</body>
+</html>

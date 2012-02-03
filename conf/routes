@@ -5,6 +5,7 @@
 GET     /                                       Application.index
 POST	/pusher/auth							PusherController.auth
 GET		/snakes/?								Snakes.index
+GET		/snakes/join/{room}						Snakes.join
 
 # Ignore favicon requests
 GET     /favicon.ico                            404
