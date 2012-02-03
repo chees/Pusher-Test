@@ -2,17 +2,20 @@
 #{set title:'Snakes on a Plain' /}
 #{set 'moreStyles'}
 	#{stylesheet 'view.css' /}
+	<link href='http://fonts.googleapis.com/css?family=Boogaloo' rel='stylesheet' type='text/css'>
 #{/set}
 
 <canvas id="canvas"></canvas>
+<div id="messages"></div>
 <div id="footer">
 	<img src="#" id="qr">
 	<div>
-		Scan the code or go to <a href="#" id="join">...</a> to join the game.
+		Take your phone and scan the code or go to <a href="#" id="join">...</a> to join the game.
 	</div>
 </div>
 
 <script src="http://js.pusher.com/1.11/pusher.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 <script src="/public/javascripts/util.js"></script>
 <script src="/public/javascripts/stats.js"></script>
 <script src="/public/javascripts/timer.js"></script>
@@ -22,21 +25,19 @@
 var room = '${room}';
 
 var canvas = document.getElementById('canvas');
-// TODO is this the way to get proper width and height?
 canvas.width = document.documentElement.clientWidth;
 canvas.height = document.documentElement.clientHeight - 100;
 
 var game = new Game(canvas.getContext('2d'), room);
 game.start();
 
-//Enable pusher logging - don't include this in production
 /*
 Pusher.log = function(message) {
-	if (window.console && window.console.log) window.console.log(message);
+	//if (window.console && window.console.log) window.console.log(message);
 	//document.getElementById('log').innerHTML += message + '<br>';
+	//game.message(message);
 };
 
-// Flash fallback logging - don't include this in production
 WEB_SOCKET_DEBUG = true;
 */
 

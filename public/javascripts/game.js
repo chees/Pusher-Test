@@ -17,7 +17,6 @@ Game.prototype.start = function() {
 	
 	// Pusher
 	var pusher = new Pusher('f4bc874a627d26b1eb2b');
-	// TODO generate a new channel for every game
 	//this.channel = pusher.subscribe('presence-channel');
 	this.channel = pusher.subscribe('presence-' + this.room);
 	this.channel.bind('pusher:subscription_error', function(d) {
@@ -81,5 +80,11 @@ Game.prototype.draw = function() {
 
 Game.prototype.addPlayer = function(id) {
 	this.entities.push(new Player(this, id));
-	console.log('Player added');
+	this.message('New Player!');
+};
+
+Game.prototype.message = function(msg) {
+	var msg = $('<p>'+msg+'</p>');
+	$('#messages').append(msg);
+	msg.fadeIn(500).delay(1000).hide(1500);
 };

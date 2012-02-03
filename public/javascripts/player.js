@@ -49,7 +49,7 @@ Player.prototype.update = function() {
 
 Player.prototype.die = function() {
 	this.isDead = true;
-	console.log('Player died');
+	this.game.message('Player died');
 	var ctx = this.game.ctx;
 	
 	ctx.beginPath();
