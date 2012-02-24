@@ -121,6 +121,7 @@ Game.prototype.removePlayer = function(id) {
 		var entity = this.entities[i];
 		
 		if (entity.id == id) {
+			this.message(entity.name + ' disconnected');
 			entity.remove();
 		}
 	}

@@ -25,9 +25,11 @@ Player.prototype.reset = function() {
 };
 
 Player.prototype.setName = function(name) {
-	// TODO filter the name for special chars?
-	this.name = name.substring(0, 20);
-	this.nameDiv.innerHTML = name.substring(0, 20);
+	// Filter the name
+	var n = name.substring(0, 20);
+	n = $('<div/>').text(n).html()
+	this.name = n;
+	this.nameDiv.innerHTML = n;
 };
 
 Player.prototype.update = function() {
