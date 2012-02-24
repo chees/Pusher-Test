@@ -4,6 +4,10 @@ body {
 	font-family: monospace;
 }
 
+a {
+	color: #A2EF00;
+}
+
 #dpad {
 	width: 80%;
 	margin: 40px 10%;
@@ -42,7 +46,7 @@ body {
 	font-size: 24px;
 }
 
-#connecting {
+.overlay {
 	position: absolute;
 	top: 0;
 	bottom: 0;
@@ -53,4 +57,8 @@ body {
 	text-align: center;
 	color: white;
 	font-size: 32px;
+}
+
+#disconnected {
+	display: none;
 }

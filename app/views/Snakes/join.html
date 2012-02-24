@@ -17,7 +17,9 @@
 
 <div id="log" style="width: 90%; max-height: 200px; position: absolute; top:120px; background-color: white;"></div>
 
-<div id="connecting">Connecting...</div>
+<div id="connecting" class="overlay">Connecting...</div>
+
+<div id="disconnected" class="overlay">Disconnected. <a href="#" onclick="window.location.href=window.location.href">Reload</a></div>
 
 <script src="http://js.pusher.com/1.11/pusher.min.js"></script>
 <script>
@@ -35,11 +37,11 @@ var id = '';
 var subscription_succeeded = false;
 var dir = 0; // Direction -1:left, 0:straight, 1:right
 var pingStart = 0;
-var name = prompt('What is your name?');
+var name = prompt('What is your name?'); // TODO handle null/empty // TODO get default from cookie
 
 var pusher = new Pusher('f4bc874a627d26b1eb2b');
-var channel = pusher.subscribe('presence-channel');
-//var channel = pusher.subscribe('presence-${room}');
+//var channel = pusher.subscribe('presence-channel');
+var channel = pusher.subscribe('presence-${room}');
 channel.bind('pusher:subscription_succeeded', function(d) {
 	id = readCookie('id');
 	subscription_succeeded = true;
@@ -48,10 +50,12 @@ channel.bind('pusher:subscription_succeeded', function(d) {
 	ping();
 });
 channel.bind('client-event', function(data) {
-	//console.log(data);
+	if (data.timeout == id) {
+		document.getElementById('disconnected').style.display = 'block';
+	}
 });
 channel.bind('client-meta', function(data) {
-	if(data.pong == id) {
+	if (data.pong == id) {
 		var ping = Math.round((Date.now() - pingStart) / 2);
 		document.getElementById('ping').innerHTML = 'Ping: ' + ping;
 	}

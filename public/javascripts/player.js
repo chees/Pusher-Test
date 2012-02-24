@@ -8,6 +8,7 @@ function Player(game, id) {
 	this.r = Math.floor(Math.random()*256);
 	this.g = Math.floor(Math.random()*256);
 	this.b = Math.floor(Math.random()*256);
+	this.lastMessage = Date.now();
 	this.reset();
 	this.nameDiv = document.createElement('div');
 	this.nameDiv.setAttribute('class', 'name');

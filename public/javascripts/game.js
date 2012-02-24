@@ -18,8 +18,8 @@ Game.prototype.start = function() {
 	
 	// Pusher
 	var pusher = new Pusher('f4bc874a627d26b1eb2b');
-	this.channel = pusher.subscribe('presence-channel');
-	//this.channel = pusher.subscribe('presence-' + this.room);
+	//this.channel = pusher.subscribe('presence-channel');
+	this.channel = pusher.subscribe('presence-' + this.room);
 	this.channel.bind('pusher:subscription_error', function(d) {
 		// TODO
 	});
@@ -51,6 +51,7 @@ Game.prototype.handleInput = function(data) {
 	for (var i = 0; i < this.entities.length; i++) {
 		var ent = this.entities[i];
 		if (ent.id == data.id) {
+			ent.lastMessage = Date.now();
 			if (data.dir != null) {
 				ent.dir = data.dir;
 			}
@@ -64,6 +65,14 @@ Game.prototype.handleInput = function(data) {
 Game.prototype.handleMeta = function(data) {
 	if (data.meta == 'ping') {
 		this.channel.trigger('client-meta', {'pong' : data.id});
+		/*
+		for (var i = 0; i < this.entities.length; i++) {
+			var ent = this.entities[i];
+			if (ent.id == data.id) {
+				ent.lastMessage = Date.now();
+			}
+		}
+		*/
 	}
 };
 
@@ -81,9 +90,9 @@ Game.prototype.update = function() {
 	
 	var numAlive = 0;
 	
+	// Update players
 	for (var i = 0; i < this.entities.length; i++) {
 		var entity = this.entities[i];
-		
 		if (!entity.removeFromWorld) {
 			entity.update();
 			if (!entity.isDead) {
@@ -92,12 +101,14 @@ Game.prototype.update = function() {
 		}
 	}
 	
+	// Check if round is finished
 	if (this.entities.length > 0) {
 		if (numAlive == 0 || (numAlive == 1 && this.entities.length > 1)) {
 			this.finishRound();
 		}
 	}
 	
+	// Remove disconnected players
 	for (var i = this.entities.length-1; i >= 0; --i) {
 		if (this.entities[i].removeFromWorld) {
 			this.entities.splice(i, 1);
@@ -128,20 +139,25 @@ Game.prototype.removePlayer = function(id) {
 };
 
 Game.prototype.finishRound = function() {
-	this.message('Get ready in 5...');
 	this.roundFinished = true;
-	setTimeout("game.message('4...')", 1000);
-	setTimeout("game.message('3...')", 2000);
-	setTimeout("game.message('2...')", 3000);
-	setTimeout("game.message('1...')", 4000);
-	setTimeout('game.reset()', 5000);
+	setTimeout("game.message('Next round starts in 3...')", 1000);
+	setTimeout("game.message('2...')", 2000);
+	setTimeout("game.message('1...')", 3000);
+	setTimeout('game.reset()', 4000);
 };
 
 Game.prototype.reset = function() {
 	this.roundFinished = false;
 	this.ctx.clearRect(0, 0, canvas.width, canvas.height);
 	for (var i = 0; i < this.entities.length; i++) {
-		this.entities[i].reset();
+		var entity = this.entities[i];
+		if (Date.now() - entity.lastMessage > 120000) {
+			this.message(entity.name + ' timed out');
+			this.channel.trigger('client-event', {'timeout' : entity.id});
+			entity.remove();
+		} else {
+			entity.reset();
+		}
 	}
 	this.message('Go!');
 };
