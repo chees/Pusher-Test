@@ -17,6 +17,8 @@
 
 <div id="log" style="width: 90%; max-height: 200px; position: absolute; top:120px; background-color: white;"></div>
 
+<div id="connecting">Connecting...</div>
+
 <script src="http://js.pusher.com/1.11/pusher.min.js"></script>
 <script>
 /*
@@ -36,11 +38,12 @@ var pingStart = 0;
 var name = prompt('What is your name?');
 
 var pusher = new Pusher('f4bc874a627d26b1eb2b');
-//var channel = pusher.subscribe('presence-channel');
-var channel = pusher.subscribe('presence-${room}');
+var channel = pusher.subscribe('presence-channel');
+//var channel = pusher.subscribe('presence-${room}');
 channel.bind('pusher:subscription_succeeded', function(d) {
 	id = readCookie('id');
 	subscription_succeeded = true;
+	document.body.removeChild(document.getElementById('connecting'));
 	send({ 'name': name });
 	ping();
 });

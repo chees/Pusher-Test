@@ -1,6 +1,7 @@
 body {
 	background: #fff url(/public/images/snakepattern1.png) center center fixed no-repeat;
 	background-size: cover;
+	font-family: monospace;
 }
 
 #dpad {
@@ -39,6 +40,17 @@ body {
 	/*background-color: white;*/
 	text-shadow: 0 0 2px #fff, 0 0 2px #fff, 0 0 4px #fff;
 	font-size: 24px;
-	font-family: monospace;
-	/*border-radius: 10px;*/
+}
+
+#connecting {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	background-color: rgba(0, 0, 0, 0.8);
+	padding-top: 40%;
+	text-align: center;
+	color: white;
+	font-size: 32px;
 }

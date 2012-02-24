@@ -18,8 +18,8 @@ Game.prototype.start = function() {
 	
 	// Pusher
 	var pusher = new Pusher('f4bc874a627d26b1eb2b');
-	//this.channel = pusher.subscribe('presence-channel');
-	this.channel = pusher.subscribe('presence-' + this.room);
+	this.channel = pusher.subscribe('presence-channel');
+	//this.channel = pusher.subscribe('presence-' + this.room);
 	this.channel.bind('pusher:subscription_error', function(d) {
 		// TODO
 	});
@@ -32,6 +32,9 @@ Game.prototype.start = function() {
 	this.channel.bind('pusher:member_added', function(member) {
 		//console.log(member.id, member.info);
 		that.addPlayer(member.id);
+	});
+	this.channel.bind('pusher:member_removed', function(member) {
+		that.removePlayer(member.id);
 	});
 	
 	// Game loop
@@ -95,13 +98,11 @@ Game.prototype.update = function() {
 		}
 	}
 	
-	/*
 	for (var i = this.entities.length-1; i >= 0; --i) {
 		if (this.entities[i].removeFromWorld) {
 			this.entities.splice(i, 1);
 		}
 	}
-	*/
 };
 
 Game.prototype.draw = function() {
@@ -113,6 +114,16 @@ Game.prototype.draw = function() {
 Game.prototype.addPlayer = function(id) {
 	this.entities.push(new Player(this, id));
 	this.message('New Player!');
+};
+
+Game.prototype.removePlayer = function(id) {
+	for (var i = 0; i < this.entities.length; i++) {
+		var entity = this.entities[i];
+		
+		if (entity.id == id) {
+			entity.remove();
+		}
+	}
 };
 
 Game.prototype.finishRound = function() {

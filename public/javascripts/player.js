@@ -25,8 +25,9 @@ Player.prototype.reset = function() {
 };
 
 Player.prototype.setName = function(name) {
-	this.name = name;
-	this.nameDiv.innerHTML = name;
+	// TODO filter the name for special chars?
+	this.name = name.substring(0, 20);
+	this.nameDiv.innerHTML = name.substring(0, 20);
 };
 
 Player.prototype.update = function() {
@@ -77,6 +78,12 @@ Player.prototype.die = function() {
 	ctx.lineWidth = 1;
 	ctx.strokeStyle = 'rgb(0, 0, 0)';
 	ctx.stroke();
+};
+
+Player.prototype.remove = function() {
+	this.isDead = true;
+	this.removeFromWorld = true;
+	document.body.removeChild(this.nameDiv);
 };
 
 Player.prototype.draw = function(ctx) {
