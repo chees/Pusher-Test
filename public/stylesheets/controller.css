@@ -29,3 +29,16 @@ body {
 	border-top-right-radius: 15px;
 	border-bottom-right-radius: 15px;
 }
+
+#ping {
+	position: absolute;
+	top: 200px;
+	left: 40%;
+	right: 40%;
+	text-align: center;
+	/*background-color: white;*/
+	text-shadow: 0 0 2px #fff, 0 0 2px #fff, 0 0 4px #fff;
+	font-size: 24px;
+	font-family: monospace;
+	/*border-radius: 10px;*/
+}

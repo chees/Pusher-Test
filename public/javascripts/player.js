@@ -1,10 +1,7 @@
 function Player(game, id) {
 	this.game = game;
 	this.id = id;
-	this.x = Math.random() * game.ctx.canvas.width/2 + game.ctx.canvas.width/4;
-	this.y = Math.random() * game.ctx.canvas.height/2 + game.ctx.canvas.height/4;
-	this.lastX = this.x;
-	this.lastY = this.y;
+	this.setRandomLocation();
 	this.dir = 0; // Requested direction change
 	this.angle = Math.random() * Math.PI * 2;
 	this.speed = 100;
@@ -15,6 +12,13 @@ function Player(game, id) {
 	this.b = Math.floor(Math.random()*256);
 	this.isDead = false;
 }
+
+Player.prototype.setRandomLocation = function() {
+	this.x = Math.random() * game.ctx.canvas.width/2 + game.ctx.canvas.width/4;
+	this.y = Math.random() * game.ctx.canvas.height/2 + game.ctx.canvas.height/4;
+	this.lastX = this.x;
+	this.lastY = this.y;
+};
 
 Player.prototype.update = function() {
 	if (this.isDead) return;
@@ -92,4 +96,9 @@ Player.prototype.draw = function(ctx) {
 	ctx.lineWidth = 1;
 	ctx.strokeStyle = 'rgb(0, 0, 0)';
 	ctx.stroke();
+};
+
+Player.prototype.reset = function() {
+	this.isDead = false;
+	this.setRandomLocation();
 };

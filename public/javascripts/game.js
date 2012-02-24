@@ -4,6 +4,7 @@ function Game(ctx, room) {
 	this.entities = [];
 	this.timer = new Timer();
 	this.stats = new Stats();
+	this.roundFinished = false;
 }
 
 Game.prototype.start = function() {
@@ -24,6 +25,9 @@ Game.prototype.start = function() {
 	});
 	this.channel.bind('client-event', function(data) {
 		that.handleInput(data);
+	});
+	this.channel.bind('client-meta', function(data) {
+		that.handleMeta(data);
 	});
 	this.channel.bind('pusher:member_added', function(member) {
 		//console.log(member.id, member.info);
@@ -49,6 +53,12 @@ Game.prototype.handleInput = function(data) {
 	}
 };
 
+Game.prototype.handleMeta = function(data) {
+	if (data.meta == 'ping') {
+		this.channel.trigger('client-meta', {'pong' : data.id});
+	}
+};
+
 Game.prototype.loop = function() {
 	this.clockTick = this.timer.tick();
 	this.update();
@@ -57,19 +67,34 @@ Game.prototype.loop = function() {
 };
 
 Game.prototype.update = function() {
+	if (this.roundFinished) {
+		return;
+	}
+	
+	var somebodyAlive = false;
+	
 	for (var i = 0; i < this.entities.length; i++) {
 		var entity = this.entities[i];
 		
 		if (!entity.removeFromWorld) {
 			entity.update();
+			if (!entity.isDead) {
+				somebodyAlive = true;
+			}
 		}
 	}
-
+	
+	if (this.entities.length > 0 && !somebodyAlive) {
+		this.finishRound();
+	}
+	
+	/*
 	for (var i = this.entities.length-1; i >= 0; --i) {
 		if (this.entities[i].removeFromWorld) {
 			this.entities.splice(i, 1);
 		}
 	}
+	*/
 };
 
 Game.prototype.draw = function() {
@@ -81,6 +106,23 @@ Game.prototype.draw = function() {
 Game.prototype.addPlayer = function(id) {
 	this.entities.push(new Player(this, id));
 	this.message('New Player!');
+};
+
+Game.prototype.finishRound = function() {
+	this.message('Everybody died');
+	this.roundFinished = true;
+	setTimeout('game.message(3)', 1000);
+	setTimeout('game.message(2)', 2000);
+	setTimeout('game.message(1)', 3000);
+	setTimeout('game.reset()', 4000);
+};
+
+Game.prototype.reset = function() {
+	this.roundFinished = false;
+	this.ctx.clearRect(0, 0, canvas.width, canvas.height);
+	for (var i = 0; i < this.entities.length; i++) {
+		this.entities[i].reset();
+	}
 };
 
 Game.prototype.message = function(msg) {

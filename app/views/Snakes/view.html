@@ -10,7 +10,7 @@
 <div id="footer">
 	<img src="#" id="qr">
 	<div>
-		Take your phone and scan the code or go to <a href="#" id="join">...</a> to join the game.
+		Take your phone and scan the code or go to <a href="#" id="join" target="_blank">...</a> to join the game.
 	</div>
 </div>
 
@@ -26,20 +26,17 @@ var room = '${room}';
 
 var canvas = document.getElementById('canvas');
 canvas.width = document.documentElement.clientWidth;
-canvas.height = document.documentElement.clientHeight - 100;
+canvas.height = document.documentElement.clientHeight - 104;
 
 var game = new Game(canvas.getContext('2d'), room);
 game.start();
 
-/*
+
 Pusher.log = function(message) {
 	//if (window.console && window.console.log) window.console.log(message);
 	//document.getElementById('log').innerHTML += message + '<br>';
 	//game.message(message);
 };
-
-WEB_SOCKET_DEBUG = true;
-*/
 
 var joinLink = window.location.href.substring(0, window.location.href.length - "view".length);
 joinLink += 'join/' + room;

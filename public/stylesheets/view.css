@@ -8,7 +8,7 @@ body {
 	position: absolute;
 	top: 0px;
 	right: 0px;
-	bottom: 100px;
+	bottom: 104px;
 	left: 0px;
 	background-color: #000;
 }
@@ -29,11 +29,12 @@ body {
 #footer {
 	position: absolute;
 	width: 100%;
-	height: 100px;
+	height: 104px;
 	bottom: 0px;
 }
 #footer #qr {
 	float: left;
+	border: 2px solid white;
 }
 #footer div {
 	float: left;
