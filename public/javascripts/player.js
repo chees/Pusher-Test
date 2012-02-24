@@ -1,23 +1,32 @@
 function Player(game, id) {
 	this.game = game;
 	this.id = id;
-	this.setRandomLocation();
-	this.dir = 0; // Requested direction change
-	this.angle = Math.random() * Math.PI * 2;
+	this.name = '';
 	this.speed = 100;
 	this.turnSpeed = 3;
 	this.lineWidth = 16;
 	this.r = Math.floor(Math.random()*256);
 	this.g = Math.floor(Math.random()*256);
 	this.b = Math.floor(Math.random()*256);
-	this.isDead = false;
+	this.reset();
+	this.nameDiv = document.createElement('div');
+	this.nameDiv.setAttribute('class', 'name');
+	document.body.appendChild(this.nameDiv);
 }
 
-Player.prototype.setRandomLocation = function() {
+Player.prototype.reset = function() {
 	this.x = Math.random() * game.ctx.canvas.width/2 + game.ctx.canvas.width/4;
 	this.y = Math.random() * game.ctx.canvas.height/2 + game.ctx.canvas.height/4;
 	this.lastX = this.x;
 	this.lastY = this.y;
+	this.dir = 0; // Requested direction change
+	this.angle = Math.random() * Math.PI * 2;
+	this.isDead = false;
+};
+
+Player.prototype.setName = function(name) {
+	this.name = name;
+	this.nameDiv.innerHTML = name;
 };
 
 Player.prototype.update = function() {
@@ -49,11 +58,14 @@ Player.prototype.update = function() {
 	
 	this.x += Math.cos(this.angle) * d;
 	this.y -= Math.sin(this.angle) * d;
+	
+	this.nameDiv.style.left = Math.round(this.x) + 10 + 'px';
+	this.nameDiv.style.top = Math.round(this.y) - 10 + 'px';
 };
 
 Player.prototype.die = function() {
 	this.isDead = true;
-	this.game.message('Player died');
+	this.game.message(this.name + ' died');
 	var ctx = this.game.ctx;
 	
 	ctx.beginPath();
@@ -96,9 +108,4 @@ Player.prototype.draw = function(ctx) {
 	ctx.lineWidth = 1;
 	ctx.strokeStyle = 'rgb(0, 0, 0)';
 	ctx.stroke();
-};
-
-Player.prototype.reset = function() {
-	this.isDead = false;
-	this.setRandomLocation();
 };

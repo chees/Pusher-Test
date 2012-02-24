@@ -48,7 +48,12 @@ Game.prototype.handleInput = function(data) {
 	for (var i = 0; i < this.entities.length; i++) {
 		var ent = this.entities[i];
 		if (ent.id == data.id) {
-			ent.dir = data.dir;
+			if (data.dir != null) {
+				ent.dir = data.dir;
+			}
+			if (data.name != null) {
+				ent.setName(data.name);
+			}
 		}
 	}
 };
@@ -71,7 +76,7 @@ Game.prototype.update = function() {
 		return;
 	}
 	
-	var somebodyAlive = false;
+	var numAlive = 0;
 	
 	for (var i = 0; i < this.entities.length; i++) {
 		var entity = this.entities[i];
@@ -79,13 +84,15 @@ Game.prototype.update = function() {
 		if (!entity.removeFromWorld) {
 			entity.update();
 			if (!entity.isDead) {
-				somebodyAlive = true;
+				numAlive++;
 			}
 		}
 	}
 	
-	if (this.entities.length > 0 && !somebodyAlive) {
-		this.finishRound();
+	if (this.entities.length > 0) {
+		if (numAlive == 0 || (numAlive == 1 && this.entities.length > 1)) {
+			this.finishRound();
+		}
 	}
 	
 	/*
@@ -109,12 +116,13 @@ Game.prototype.addPlayer = function(id) {
 };
 
 Game.prototype.finishRound = function() {
-	this.message('Everybody died');
+	this.message('Get ready in 5...');
 	this.roundFinished = true;
-	setTimeout('game.message(3)', 1000);
-	setTimeout('game.message(2)', 2000);
-	setTimeout('game.message(1)', 3000);
-	setTimeout('game.reset()', 4000);
+	setTimeout("game.message('4...')", 1000);
+	setTimeout("game.message('3...')", 2000);
+	setTimeout("game.message('2...')", 3000);
+	setTimeout("game.message('1...')", 4000);
+	setTimeout('game.reset()', 5000);
 };
 
 Game.prototype.reset = function() {
@@ -123,6 +131,7 @@ Game.prototype.reset = function() {
 	for (var i = 0; i < this.entities.length; i++) {
 		this.entities[i].reset();
 	}
+	this.message('Go!');
 };
 
 Game.prototype.message = function(msg) {
