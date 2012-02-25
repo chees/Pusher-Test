@@ -162,6 +162,15 @@ Game.prototype.reset = function() {
 	this.message('Go!');
 };
 
+Game.prototype.addScores = function(n) {
+	for (var i = 0; i < this.entities.length; i++) {
+		var entity = this.entities[i];
+		if (!entity.isDead) {
+			entity.addScore(n);
+		}
+	}
+};
+
 Game.prototype.message = function(msg) {
 	var msg = $('<p>'+msg+'</p>');
 	$('#messages').append(msg);

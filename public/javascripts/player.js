@@ -8,11 +8,16 @@ function Player(game, id) {
 	this.r = Math.floor(Math.random()*256);
 	this.g = Math.floor(Math.random()*256);
 	this.b = Math.floor(Math.random()*256);
+	this.score = 0;
 	this.lastMessage = Date.now();
 	this.reset();
 	this.nameDiv = document.createElement('div');
 	this.nameDiv.setAttribute('class', 'name');
 	document.body.appendChild(this.nameDiv);
+	this.scoreDiv = document.createElement('div');
+	this.scoreDiv.setAttribute('class', 'score');
+	this.scoreDiv.innerHTML = this.score;
+	document.body.appendChild(this.scoreDiv);
 }
 
 Player.prototype.reset = function() {
@@ -31,6 +36,11 @@ Player.prototype.setName = function(name) {
 	n = $('<div/>').text(n).html()
 	this.name = n;
 	this.nameDiv.innerHTML = n;
+};
+
+Player.prototype.addScore = function(n) {
+	this.score += n;
+	this.scoreDiv.innerHTML = this.score;
 };
 
 Player.prototype.update = function() {
@@ -65,11 +75,15 @@ Player.prototype.update = function() {
 	
 	this.nameDiv.style.left = Math.round(this.x) + 10 + 'px';
 	this.nameDiv.style.top = Math.round(this.y) - 10 + 'px';
+	this.scoreDiv.style.left = Math.round(this.x) + 10 + 'px';
+	this.scoreDiv.style.top = Math.round(this.y) + 10 + 'px';
 };
 
 Player.prototype.die = function() {
 	this.isDead = true;
 	this.game.message(this.name + ' died');
+	this.game.addScores(1);
+	
 	var ctx = this.game.ctx;
 	
 	ctx.beginPath();
@@ -87,6 +101,7 @@ Player.prototype.remove = function() {
 	this.isDead = true;
 	this.removeFromWorld = true;
 	document.body.removeChild(this.nameDiv);
+	document.body.removeChild(this.scoreDiv);
 };
 
 Player.prototype.draw = function(ctx) {
