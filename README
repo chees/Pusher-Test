@@ -6,3 +6,7 @@ pusher.appId =
 pusher.key = 
 pusher.secret = 
 
+
+You need Play 1.2.x to run this project.
+Run `play deps` to resolve the dependencies.
+Run `play run` to run the project locally (you still need Pusher).
